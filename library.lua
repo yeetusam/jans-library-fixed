@@ -1710,17 +1710,18 @@ function library:CreateWindow(name, size, hidebutton)
                     return colorpicker
                 end
 
-                function toggle:AddSlider(min, default, max, decimals, callback, flag)
+                function toggle:AddSlider(min, default, max, decimals, suffix, callback, flag)
                     local slider = { }
                     slider.text = text or ""
                     slider.callback = callback or function(value) end
                     slider.min = min or 0
                     slider.max = max or 100
                     slider.decimals = decimals or 1
+		    slider.suffix = suffix or ""
                     slider.default = default or slider.min
                     slider.flag = flag or ( (toggle.text or "") .. tostring(#toggle.Items:GetChildren()))
     
-                    slider.value = slider.default
+                    slider.value = ("%d%s"):format(slider.default, tostring(slider.suffix))
                     local dragging = false
     
                     slider.Main = Instance.new("TextButton", sector.Items)
@@ -1822,7 +1823,7 @@ function library:CreateWindow(name, size, hidebutton)
                             library.flags[slider.flag] = slider.value
                         end
                         slider.SlideBar:TweenSize(UDim2.fromOffset(percent * slider.Main.AbsoluteSize.X, slider.Main.AbsoluteSize.Y), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.05)
-                        slider.InputLabel.Text = slider.value
+                        slider.InputLabel.Text = ("%d%s"):format(slider.value, tostring(slider.suffix))
                         pcall(slider.callback, slider.value)
                     end
                     slider:Set(slider.default)
